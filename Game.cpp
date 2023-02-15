@@ -1,85 +1,102 @@
 #include "Game.h"
+#include "Player.h"
 #include <iostream>
-std::string SquareTypeStringify(SquareType sq)
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+
+// Implementation of Board class
+Board::Board()
 {
-    switch (sq)
+    for (int i = 0; i < 10; i++)
     {
-    case SquareType::Wall:
-        return "Wall";
-    case SquareType::Dots:
-        return "Dots";
-    case SquareType::Pacman:
-        return "Pacman";
-    case SquareType::Treasure:
-        return "Treasure";
-    case SquareType::Enemies:
-        return "Enemies";
-    case SquareType::Empty:
-        return "Empty";
-    case SquareType::PowerfulPacman:
-        return "PowerfulPacman";
-    case SquareType::Trap:
-        return "Trap";
-    case SquareType::EnemySpecialTreasure:
-        return "EnemySpecialTreasure";
-    default:
-        return "Unknown";
+        for (int j = 0; j < 10; j++)
+        {
+            arr_[i][j] = SquareType::Empty;
+        }
     }
+    rows_ = 10;
+    cols_ = 10;
+}
+
+SquareType Board::get_square_value(Position pos) const
+{
+    return arr_[pos.row][pos.col];
+}
+
+void Board::SetSquareValue(Position pos, SquareType value)
+{
+    arr_[pos.row][pos.col] = value;
 }
 
 std::vector<Position> Board::GetMoves(Player *p)
 {
-    std::vector<Position> moves;
+    std::vector<Position> possible_moves;
     int row = p->get_position().row;
     int col = p->get_position().col;
-    if (arr_[row - 1][col] != SquareType::Wall)
+    if (row - 1 >= 0 && arr_[row - 1][col] != SquareType::Wall)
     {
-        moves.push_back({row - 1, col});
+        possible_moves.push_back({row - 1, col});
     }
-    if (arr_[row + 1][col] != SquareType::Wall)
+    if (row + 1 < 10 && arr_[row + 1][col] != SquareType::Wall)
     {
-        moves.push_back({row + 1, col});
+        possible_moves.push_back({row + 1, col});
     }
-    if (arr_[row][col - 1] != SquareType::Wall)
+    if (col - 1 >= 0 && arr_[row][col - 1] != SquareType::Wall)
     {
-        moves.push_back({row, col - 1});
+        possible_moves.push_back({row, col - 1});
     }
-    if (arr_[row][col + 1] != SquareType::Wall)
+    if (col + 1 < 10 && arr_[row][col + 1] != SquareType::Wall)
     {
-        moves.push_back({row, col + 1});
+        possible_moves.push_back({row, col + 1});
     }
-    return moves;
+
+    return possible_moves;
 }
 
-bool Board::MovePlayer(Player p, Position pos, std::vector<Player> enemylist)
+bool Board::MovePlayer(Player *p, Position pos, std::vector<Player *> enemylist)
 {
-    if (arr_[pos.row][pos.col] == SquareType::Wall)
+     if (pos.row < 0 || pos.row >= board_.rows() || pos.col < 0 || pos.col >= board_.cols() || board_.get_square_value(pos) == SquareType::Wall)
     {
         return false;
     }
-    p->SetPosition(pos);
-    SquareType value = arr_[pos.row][pos.col];
-    if (value == SquareType::Dots)
+
+    // Check if the new position is occupied by another player or an enemy
+    for (auto player : players_)
     {
-        p->ChangePoints(1);
-        arr_[pos.row][pos.col] = SquareType::Empty;
-        dots_count_--;
-    }
-    else if (value == SquareType::Treasure)
-    {
-        p->ChangePoints(10);
-        p->setHasTreasure();
-        arr_[pos.row][pos.col] = SquareType::Empty;
-    }
-    else if (value == SquareType::Enemies)
-    {
-        for (int i = 0; i < enemylist.size(); i++)
+        if (player != p && player->get_position() == pos)
         {
-            if (enemylist[i]->get_position().row == pos.row && enemylist[i]->get_position().col == pos.col)
-            {
-                p->ChangePoints(5);
-                enemylist[i]->setIsDead(true);
-                enemylist[i]->setLives();
-            }
+            return false;
         }
     }
+    for (auto enemy : enemies_)
+    {
+        if (enemy->get_position() == pos)
+        {
+            return false;
+        }
+    }
+
+    // Update the player's position and the board
+    board_.MovePlayer(p, pos, enemies_);
+    return true;
+}
+}
+
+bool Board::MoveEnemy(Player *p, Position pos)
+{
+    // Check if the new position is within the bounds of the board and not a wall
+    if (pos.row < 0 || pos.row >= rows_ || pos.col < 0 || pos.col >= cols_ || arr_[pos.row][pos.col] == SquareType::Wall)
+    {
+        return false;
+    }
+
+    // Update the enemy's position and the board
+    arr_[p->get_position().row][p->get_position().col] = SquareType::Empty;
+    arr_[pos.row][pos.col] = SquareType::Enemies;
+    p->set_previous_position(p->get_position());
+    p->set_position(pos);
+
+    return true;
+}

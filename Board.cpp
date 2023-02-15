@@ -1,6 +1,18 @@
 #include "Game.h"
 #include <iostream>
 #include <vector>
+#include "Board.h"
+
+Board::Board(const int rows, const int cols) : rows_{rows}, cols_{cols}, dots_count_{0}
+{
+    for (int row = 0; row < rows; ++row)
+    {
+        for (int col = 0; col < cols; ++col)
+        {
+            arr_[row][col] = SquareType::Empty;
+        }
+    }
+}
 
 std::vector<Position> Board::GetMoves(Player *p)
 {
@@ -85,4 +97,8 @@ std::ostream &operator<<(std::ostream &os, const Board &b)
         {
             os << SquareTypeStringify(b.arr_[row][col]) << " ";
         }
-        os << std::end
+        os << std::endl;
+    }
+    return os;
+}
+

@@ -19,10 +19,8 @@ class Player
 {
 public:
 	// TODO: implement
-	Player(const std::string name, const bool is_human)
-		: name_{name}, is_human_{is_human}, points_{0}, has_Treasure_{false}, isDead_{false}, lives_{3}, moves_{0}
-	{
-	}
+	Player(const std::string name, const bool is_human);
+
 	// // These are already implemented for you
 	std::string get_name() const { return name_; }	   // inline member function
 	int get_points() const { return points_; }		   // inline member function
@@ -31,7 +29,6 @@ public:
 	bool hasTreasure() const { return has_Treasure_; } // inline member function
 	bool isDead() const { return isDead_; }			   // inline member function
 	int getLives() const { return lives_; }
-
 	// // TODO: implement the following functions
 	// // You MUST implement the following functions
 	void ChangePoints(const int x) { points_ += x; }
