@@ -1,17 +1,20 @@
-all: main.o Player.o Board.o Game.o
-g++ main.o Player.o Board.o Game.o -o main
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall
+CXXGDB = -ggdb
 
-main.o: main.cpp
-g++ -c main.cpp
-
-Player.o: Player.cpp
-g++ -c Player.cpp
-
-Board.o: Board.cpp
-g++ -c Board.cpp
-
-Game.o: Game.cpp
-g++ -c Game.cpp
+all: main
 
 clean:
-rm -f *.o main
+	rm main Player.o Board.o Game.o
+
+main: Player.o Board.o Game.o main.cpp
+	$(CXX) $(CXXFLAGS) main.cpp Player.o Board.o Game.o -o main
+
+Player.o: Player.cpp
+	$(CXX) $(CXXFLAGS) -c Player.cpp
+
+Board.o: Board.cpp
+	$(CXX) $(CXXFLAGS) -c Board.cpp
+
+Game.o: Game.cpp
+	$(CXX) $(CXXFLAGS) -c Game.cpp

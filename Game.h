@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Player.h"
+#include <string>
 
 // you may change this enum as you need
 enum class SquareType { Wall, Dots, Pacman, Treasure, Enemies, Empty, PowerfulPacman, Trap, EnemySpecialTreasure };

@@ -1,6 +1,8 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
+#include <string>
+
 struct Position
 {
 	int row;
@@ -17,8 +19,10 @@ class Player
 {
 public:
 	// TODO: implement
-	Player(const std::string name, const bool is_human); // constructor
-	name_{name}, is_human_{is_human}, points_{0}, has_Treasure_{false}, isDead_{false}, lives_{3}, moves_{0} {};
+	Player(const std::string name, const bool is_human)
+		: name_{name}, is_human_{is_human}, points_{0}, has_Treasure_{false}, isDead_{false}, lives_{3}, moves_{0}
+	{
+	}
 	// // These are already implemented for you
 	std::string get_name() const { return name_; }	   // inline member function
 	int get_points() const { return points_; }		   // inline member function
@@ -48,42 +52,6 @@ public:
 	// // ToRelativePosition is a function we used to translate positions
 	// // into direction s relative to the player (up, down, etc)
 	std::string ToRelativePosition(Position other);
-	if (other.row < pos_.row && other.col == pos_.col)
-	{
-		return "up";
-	}
-	else if (other.row > pos_.row && other.col == pos_.col)
-	{
-		return "down";
-	}
-	else if (other.row == pos_.row && other.col < pos_.col)
-	{
-		return "left";
-	}
-	else if (other.row == pos_.row && other.col > pos_.col)
-	{
-		return "right";
-	}
-	else if (other.row < pos_.row && other.col < pos_.col)
-	{
-		return "upleft";
-	}
-	else if (other.row < pos_.row && other.col > pos_.col)
-	{
-		return "upright";
-	}
-	else if (other.row > pos_.row && other.col < pos_.col)
-	{
-		return "downleft";
-	}
-	else if (other.row > pos_.row && other.col > pos_.col)
-	{
-		return "downright";
-	}
-	else
-	{
-		return "none";
-	}
 	// // Convert this player to a string representation of their name and points
 	std::string Stringify();
 
@@ -104,7 +72,6 @@ private:
 	bool isDead_;
 	int lives_ = 3;
 	int moves_;
-
 	// You may add other fields as needed
 
 }; // class Player
