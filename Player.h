@@ -59,13 +59,13 @@ public:
 	void incrementMoves() { moves_++; }
 
 	// You may add other functions as needed/wanted
-
+	bool has_Treasure_;
+	
 private:
 	std::string name_;
 	int points_;
 	Position pos_;
 	bool is_human_;
-	bool has_Treasure_;
 	bool isDead_;
 	int lives_ = 3;
 	int moves_;

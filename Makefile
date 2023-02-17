@@ -2,19 +2,22 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall
 CXXGDB = -ggdb
 
-all: main
+all: main test
 
 clean:
-	rm main Player.o Board.o Game.o
+	rm main test Player.o Game.o test.o
 
-main: Player.o Board.o Game.o main.cpp
-	$(CXX) $(CXXFLAGS) main.cpp Player.o Board.o Game.o -o main
+main: Player.o Game.o main.cpp
+	$(CXX) $(CXXFLAGS) main.cpp Player.o Game.o -o main
+
+test: Player.o Game.o test.o
+	$(CXX) $(CXXFLAGS) test.o Player.o Game.o -o test
 
 Player.o: Player.cpp
 	$(CXX) $(CXXFLAGS) -c Player.cpp
 
-Board.o: Board.cpp
-	$(CXX) $(CXXFLAGS) -c Board.cpp
-
 Game.o: Game.cpp
 	$(CXX) $(CXXFLAGS) -c Game.cpp
+
+test.o: test.cpp
+	$(CXX) $(CXXFLAGS) -c test.cpp
